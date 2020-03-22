@@ -53342,7 +53342,7 @@ var render = function() {
                         rotation: item.rotation,
                         id: item.id,
                         numPoints: 5,
-                        radius: 30,
+                        radius: 32,
                         outerRadius: 50,
                         opacity: 0.8,
                         fillPatternImage: _vm.image,
