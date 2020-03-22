@@ -6,7 +6,7 @@
       @dragstart="handleDragstart"
       @dragend="handleDragend"
     >
-      <v-layer v-if="image" ref="layer">
+      <v-layer :v-if="imagesReady()" ref="layer">
         <v-regular-polygon
           v-for="item in list"
           @click="rotate"
@@ -17,27 +17,26 @@
             sides: 6,
             rotation: item.rotation,
             id: item.id,
-            numPoints: 5,
-            radius: 100,
-            outerRadius: 100,
+            radius: hexagonRadius,
             opacity: 0.8,
-            fillPatternImage: image,
+            //fill: 'green',
+            fillPatternImage: images[item.image],
             fillPatternRepeat: 'no-repeat',
             fillPatternOffset: {
-                x: 512,
-                y: 512,
+                x: image.width/2,
+                y: image.height/2,
             },
             fillPatternScale: {
-                x: 0.2,
-                y: 0.2,
+                x: hexagonRadius/image.height,
+                y: hexagonRadius/image.height,
             },
             draggable: true,
             scaleX: dragItemId === item.id ? item.scale * 1.2 : item.scale,
             scaleY: dragItemId === item.id ? item.scale * 1.2 : item.scale,
             shadowColor: 'black',
             shadowBlur: 10,
-            shadowOffsetX: dragItemId === item.id ? 15 : 5,
-            shadowOffsetY: dragItemId === item.id ? 15 : 5,
+            shadowOffsetX: dragItemId === item.id ? 5 : 2,
+            shadowOffsetY: dragItemId === item.id ? 5 : 2,
             shadowOpacity: 0.6
           }"
         ></v-regular-polygon>
@@ -47,7 +46,7 @@
 </template>
 
 <script>
-import {Howl, Howler} from 'howler';
+import sounds from '../sounds';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -56,6 +55,8 @@ export default {
   data() {
     return {
       image: false,
+      images: {},
+      hexagonRadius: 100,
       list: [],
       dragItemId: null,
       configKonva: {
@@ -65,7 +66,14 @@ export default {
     };
   },
   methods: {
+    imagesReady() {
+        return Object.keys(this.images).length == this.image_names().length
+    },
+
     handleDragstart(e) {
+        console.log(
+            Object.keys(this.images).length
+        )
       // save drag element:
       this.dragItemId = e.target.id();
       // move current element to the top:
@@ -81,11 +89,7 @@ export default {
         const index = this.list.indexOf(item);
         this.dragItemId = null;        
 
-        var sound = new Howl({
-            src: ['sounds/punch.mp3']
-        });
-
-        sound.play();
+        sounds.place.play();
 
         // Snap to hex grid!
         let closest = this.positions().map(point => {
@@ -101,57 +105,79 @@ export default {
         e.target.attrs.y = closest.y;      
     },
     rotate(e) {
-      let clickItemId = e.target.id();
-      const item = this.list.find(i => i.id === clickItemId);
-      const index = this.list.indexOf(item);
-      this.list.splice(index, 1);
-      this.list.push(item);
+        let clickItemId = e.target.id();
+        const item = this.list.find(i => i.id === clickItemId);
+        const index = this.list.indexOf(item);
+        this.list.splice(index, 1);
+        this.list.push(item);
 
-      item.rotation += 60;
+        item.rotation += 60;
 
-        var sound = new Howl({
-            src: ['sounds/rotate.mp3']
-        });
-
-        sound.play();
+        sounds.rotate.play();
     },
 
     // See https://www.redblobgames.com/grids/hexagons/#coordinates
-    positions() {
-        let positions = [];
-        for(let r = 0; r*50<width; r++) {
-            for(let q = 0; q*50<height; q++) {
-                positions.push(
-                    {
-                        q: q,
-                        r: r,
-                        x: q * 86.6 + 0.5 * r * 86.6,
-                        y: r * 100 * 3/4
-                    }
-                )
-            }            
+        positions() {
+            let positions = [];
+            for(let r = 0; r*this.hexagonRadius/2<width; r++) {
+                for(let q = 0; q*this.hexagonRadius/2<height; q++) {
+                    positions.push(
+                        {
+                            q: q,
+                            r: r,
+                            x: q * this.hexagonRadius * 0.866 + 0.5 * r * this.hexagonRadius * 0.866,
+                            y: r * this.hexagonRadius * 3/4
+                        }
+                    )
+                }            
+            }
+
+            return positions
+        },
+
+        image_names() {
+            return [
+                //...Array(10).fill("0_1.png"),
+                "0_1.png",
+                "1_1.png",
+                "1_2.png",
+                "2_1.png",
+                "2_2.png",
+                "3_1.png",
+                "3_2.png",
+                "4_1.png",
+                "4_2.png",
+                "5_1.png",
+                "5_2.png",
+                "5_3.png",
+                "6_1.png",
+                "6_2.png",          
+            ]
+        },        
+    },
+
+
+
+    created() {
+        for(const name of this.image_names()) {
+            const image = new window.Image();
+            image.src = "/images/" + name;
+            image.onload = () => {
+                this.image = image
+                this.images[name] = image;
+            };
         }
-
-        return positions
-    }
-  },
-
-  created() {
-    const image = new window.Image();
-    image.src = "/images/terrain.png";
-    image.onload = () => {
-      this.image = image;
-    };
-  },
+    },
 
   mounted() {
-    for (let n = 0; n < 100; n++) {
+    for (let n = 0; n < 60; n++) {
       this.list.push({
         id: Math.round(Math.random() * 1000000).toString(),
+        image: this.image_names()[Math.floor(Math.random() * this.image_names().length)],
         x: Math.random() * width/2,
-        y: Math.random() * height/3,
-        rotation: 120 * Math.floor(Math.random() * 5),
-        scale: 0.5
+        y: Math.random() * height/2,
+        rotation: 0, //120 * Math.floor(Math.random() * 5),
+        scale: 1
       });
     }
   }

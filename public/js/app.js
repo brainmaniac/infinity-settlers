@@ -1908,15 +1908,19 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! howler */ "./node_modules/howler/dist/howler.js");
-/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(howler__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _sounds__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../sounds */ "./resources/js/sounds.js");
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
 //
 //
 //
@@ -1971,6 +1975,8 @@ var height = window.innerHeight;
   data: function data() {
     return {
       image: false,
+      images: {},
+      hexagonRadius: 100,
       list: [],
       dragItemId: null,
       configKonva: {
@@ -1980,10 +1986,14 @@ var height = window.innerHeight;
     };
   },
   methods: {
+    imagesReady: function imagesReady() {
+      return Object.keys(this.images).length == this.image_names().length;
+    },
     handleDragstart: function handleDragstart(e) {
       var _this = this;
 
-      // save drag element:
+      console.log(Object.keys(this.images).length); // save drag element:
+
       this.dragItemId = e.target.id(); // move current element to the top:
 
       var item = this.list.find(function (i) {
@@ -2003,10 +2013,7 @@ var height = window.innerHeight;
       });
       var index = this.list.indexOf(item);
       this.dragItemId = null;
-      var sound = new howler__WEBPACK_IMPORTED_MODULE_0__["Howl"]({
-        src: ['sounds/punch.mp3']
-      });
-      sound.play(); // Snap to hex grid!
+      _sounds__WEBPACK_IMPORTED_MODULE_0__["default"].place.play(); // Snap to hex grid!
 
       var closest = this.positions().map(function (point) {
         return _objectSpread({}, point, {
@@ -2027,47 +2034,67 @@ var height = window.innerHeight;
       this.list.splice(index, 1);
       this.list.push(item);
       item.rotation += 60;
-      var sound = new howler__WEBPACK_IMPORTED_MODULE_0__["Howl"]({
-        src: ['sounds/rotate.mp3']
-      });
-      sound.play();
+      _sounds__WEBPACK_IMPORTED_MODULE_0__["default"].rotate.play();
     },
     // See https://www.redblobgames.com/grids/hexagons/#coordinates
     positions: function positions() {
       var positions = [];
 
-      for (var r = 0; r * 50 < width; r++) {
-        for (var q = 0; q * 50 < height; q++) {
+      for (var r = 0; r * this.hexagonRadius / 2 < width; r++) {
+        for (var q = 0; q * this.hexagonRadius / 2 < height; q++) {
           positions.push({
             q: q,
             r: r,
-            x: q * 86.6 + 0.5 * r * 86.6,
-            y: r * 100 * 3 / 4
+            x: q * this.hexagonRadius * 0.866 + 0.5 * r * this.hexagonRadius * 0.866,
+            y: r * this.hexagonRadius * 3 / 4
           });
         }
       }
 
       return positions;
+    },
+    image_names: function image_names() {
+      return [//...Array(10).fill("0_1.png"),
+      "0_1.png", "1_1.png", "1_2.png", "2_1.png", "2_2.png", "3_1.png", "3_2.png", "4_1.png", "4_2.png", "5_1.png", "5_2.png", "5_3.png", "6_1.png", "6_2.png"];
     }
   },
   created: function created() {
     var _this3 = this;
 
-    var image = new window.Image();
-    image.src = "/images/terrain.png";
+    var _iterator = _createForOfIteratorHelper(this.image_names()),
+        _step;
 
-    image.onload = function () {
-      _this3.image = image;
-    };
+    try {
+      var _loop = function _loop() {
+        var name = _step.value;
+        var image = new window.Image();
+        image.src = "/images/" + name;
+
+        image.onload = function () {
+          _this3.image = image;
+          _this3.images[name] = image;
+        };
+      };
+
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        _loop();
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
   },
   mounted: function mounted() {
-    for (var n = 0; n < 100; n++) {
+    for (var n = 0; n < 60; n++) {
       this.list.push({
         id: Math.round(Math.random() * 1000000).toString(),
+        image: this.image_names()[Math.floor(Math.random() * this.image_names().length)],
         x: Math.random() * width / 2,
-        y: Math.random() * height / 3,
-        rotation: 120 * Math.floor(Math.random() * 5),
-        scale: 0.5
+        y: Math.random() * height / 2,
+        rotation: 0,
+        //120 * Math.floor(Math.random() * 5),
+        scale: 1
       });
     }
   }
@@ -53478,56 +53505,53 @@ var render = function() {
           on: { dragstart: _vm.handleDragstart, dragend: _vm.handleDragend }
         },
         [
-          _vm.image
-            ? _c(
-                "v-layer",
-                { ref: "layer" },
-                _vm._l(_vm.list, function(item) {
-                  return _c("v-regular-polygon", {
-                    key: item.id,
-                    attrs: {
-                      config: {
-                        x: item.x,
-                        y: item.y,
-                        sides: 6,
-                        rotation: item.rotation,
-                        id: item.id,
-                        numPoints: 5,
-                        radius: 100,
-                        outerRadius: 100,
-                        opacity: 0.8,
-                        fillPatternImage: _vm.image,
-                        fillPatternRepeat: "no-repeat",
-                        fillPatternOffset: {
-                          x: 512,
-                          y: 512
-                        },
-                        fillPatternScale: {
-                          x: 0.2,
-                          y: 0.2
-                        },
-                        draggable: true,
-                        scaleX:
-                          _vm.dragItemId === item.id
-                            ? item.scale * 1.2
-                            : item.scale,
-                        scaleY:
-                          _vm.dragItemId === item.id
-                            ? item.scale * 1.2
-                            : item.scale,
-                        shadowColor: "black",
-                        shadowBlur: 10,
-                        shadowOffsetX: _vm.dragItemId === item.id ? 15 : 5,
-                        shadowOffsetY: _vm.dragItemId === item.id ? 15 : 5,
-                        shadowOpacity: 0.6
-                      }
+          _c(
+            "v-layer",
+            { ref: "layer", attrs: { "v-if": _vm.imagesReady() } },
+            _vm._l(_vm.list, function(item) {
+              return _c("v-regular-polygon", {
+                key: item.id,
+                attrs: {
+                  config: {
+                    x: item.x,
+                    y: item.y,
+                    sides: 6,
+                    rotation: item.rotation,
+                    id: item.id,
+                    radius: _vm.hexagonRadius,
+                    opacity: 0.8,
+                    //fill: 'green',
+                    fillPatternImage: _vm.images[item.image],
+                    fillPatternRepeat: "no-repeat",
+                    fillPatternOffset: {
+                      x: _vm.image.width / 2,
+                      y: _vm.image.height / 2
                     },
-                    on: { click: _vm.rotate }
-                  })
-                }),
-                1
-              )
-            : _vm._e()
+                    fillPatternScale: {
+                      x: _vm.hexagonRadius / _vm.image.height,
+                      y: _vm.hexagonRadius / _vm.image.height
+                    },
+                    draggable: true,
+                    scaleX:
+                      _vm.dragItemId === item.id
+                        ? item.scale * 1.2
+                        : item.scale,
+                    scaleY:
+                      _vm.dragItemId === item.id
+                        ? item.scale * 1.2
+                        : item.scale,
+                    shadowColor: "black",
+                    shadowBlur: 10,
+                    shadowOffsetX: _vm.dragItemId === item.id ? 5 : 2,
+                    shadowOffsetY: _vm.dragItemId === item.id ? 5 : 2,
+                    shadowOpacity: 0.6
+                  }
+                },
+                on: { click: _vm.rotate }
+              })
+            }),
+            1
+          )
         ],
         1
       )
@@ -66160,6 +66184,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/sounds.js":
+/*!********************************!*\
+  !*** ./resources/js/sounds.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! howler */ "./node_modules/howler/dist/howler.js");
+/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(howler__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  place: new howler__WEBPACK_IMPORTED_MODULE_0__["Howl"]({
+    src: ['sounds/punch.mp3']
+  }),
+  rotate: new howler__WEBPACK_IMPORTED_MODULE_0__["Howl"]({
+    src: ['sounds/rotate.mp3']
+  })
+});
 
 /***/ }),
 
