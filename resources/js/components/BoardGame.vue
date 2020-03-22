@@ -9,8 +9,9 @@
       <v-layer v-if="image" ref="layer">
         <v-regular-polygon
           v-for="item in list"
+          @click="rotate"
           :key="item.id"
-          :config="{
+          :config="{  
             x: item.x,
             y: item.y,
             sides: 6,
@@ -18,7 +19,7 @@
             id: item.id,
             numPoints: 5,
             radius: 100,
-            outerRadius: 50,
+            outerRadius: 100,
             opacity: 0.8,
             fillPatternImage: image,
             fillPatternRepeat: 'no-repeat',
@@ -74,33 +75,81 @@ export default {
       this.list.push(item);
     },
     handleDragend(e) {
-        //e.target.attrs.x=50;
+        this.dragItemId = e.target.id();
+        // move current element to the top:
+        let item = this.list.find(i => i.id === this.dragItemId);
+        const index = this.list.indexOf(item);
+        this.dragItemId = null;        
+
         var sound = new Howl({
             src: ['sounds/punch.mp3']
         });
 
         sound.play();
 
-      this.dragItemId = null;
+        // Snap to hex grid!
+        let closest = this.positions().map(point => {
+            return {
+                ...point,
+                distance: Math.abs(point.x - e.evt.x) + Math.abs(point.y - e.evt.y)
+            }
+        }).reduce(function(prev, curr) {
+            return prev.distance < curr.distance ? prev : curr;
+        });
+
+        e.target.attrs.x = closest.x;
+        e.target.attrs.y = closest.y;      
+    },
+    rotate(e) {
+      let clickItemId = e.target.id();
+      const item = this.list.find(i => i.id === clickItemId);
+      const index = this.list.indexOf(item);
+      this.list.splice(index, 1);
+      this.list.push(item);
+
+      item.rotation += 60;
+
+        var sound = new Howl({
+            src: ['sounds/rotate.mp3']
+        });
+
+        sound.play();
+    },
+
+    // See https://www.redblobgames.com/grids/hexagons/#coordinates
+    positions() {
+        let positions = [];
+        for(let r = 0; r*50<width; r++) {
+            for(let q = 0; q*50<height; q++) {
+                positions.push(
+                    {
+                        q: q,
+                        r: r,
+                        x: q * 86.6 + 0.5 * r * 86.6,
+                        y: r * 100 * 3/4
+                    }
+                )
+            }            
+        }
+
+        return positions
     }
   },
 
   created() {
     const image = new window.Image();
-    //image.src = "https://konvajs.org/assets/yoda.jpg";
     image.src = "/images/terrain.png";
     image.onload = () => {
-      // set image only when it is loaded
       this.image = image;
     };
   },
 
   mounted() {
-    for (let n = 0; n < 60; n++) {
+    for (let n = 0; n < 100; n++) {
       this.list.push({
         id: Math.round(Math.random() * 1000000).toString(),
-        x: Math.random() * width,
-        y: Math.random() * height,
+        x: Math.random() * width/2,
+        y: Math.random() * height/3,
         rotation: 120 * Math.floor(Math.random() * 5),
         scale: 0.5
       });

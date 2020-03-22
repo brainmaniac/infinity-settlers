@@ -9,7 +9,8 @@
     </head>
     <body>
         <div id="app">
-            <board-game></board-game>
+            <board-game></board-game>-->
+            <!--<example></example>-->
         </div>
         <script src="/js/app.js"></script>
     </body>
