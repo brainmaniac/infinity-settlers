@@ -87,7 +87,7 @@ export default {
   created() {
     const image = new window.Image();
     //image.src = "https://konvajs.org/assets/yoda.jpg";
-    image.src = "http://infinity-settlers.test/images/terrain.png";
+    image.src = "/images/terrain.png";
     image.onload = () => {
       // set image only when it is loaded
       this.image = image;

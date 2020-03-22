@@ -2000,7 +2000,7 @@ var height = window.innerHeight;
 
     var image = new window.Image(); //image.src = "https://konvajs.org/assets/yoda.jpg";
 
-    image.src = "http://infinity-settlers.test/images/terrain.png";
+    image.src = "https://infinity-settlers.test/images/terrain.png";
 
     image.onload = function () {
       // set image only when it is loaded
