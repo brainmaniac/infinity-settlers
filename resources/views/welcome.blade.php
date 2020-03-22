@@ -5,10 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Infinity Settlers</title>
-
+        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     </head>
-    <body>
-        <div id="app">
+    <body class="">
+        <div id="app" class="">
             <board-game></board-game>
         </div>
         <script src="/js/app.js"></script>
