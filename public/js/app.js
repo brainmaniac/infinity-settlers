@@ -1960,7 +1960,6 @@ __webpack_require__.r(__webpack_exports__);
 
 var width = window.innerWidth;
 var height = window.innerHeight;
-alert(window.innerWidth + " x " + window.innerHeight);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -53343,7 +53342,7 @@ var render = function() {
                         rotation: item.rotation,
                         id: item.id,
                         numPoints: 5,
-                        radius: 32,
+                        radius: 100,
                         outerRadius: 50,
                         opacity: 0.8,
                         fillPatternImage: _vm.image,
@@ -53353,8 +53352,8 @@ var render = function() {
                           y: 512
                         },
                         fillPatternScale: {
-                          x: 0.07,
-                          y: 0.07
+                          x: 0.2,
+                          y: 0.2
                         },
                         draggable: true,
                         scaleX:

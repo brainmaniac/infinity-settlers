@@ -17,7 +17,7 @@
             rotation: item.rotation,
             id: item.id,
             numPoints: 5,
-            radius: 32,
+            radius: 100,
             outerRadius: 50,
             opacity: 0.8,
             fillPatternImage: image,
@@ -27,8 +27,8 @@
                 y: 512,
             },
             fillPatternScale: {
-                x: 0.07,
-                y: 0.07,
+                x: 0.2,
+                y: 0.2,
             },
             draggable: true,
             scaleX: dragItemId === item.id ? item.scale * 1.2 : item.scale,
@@ -50,10 +50,6 @@ import {Howl, Howler} from 'howler';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-
-alert(
-    window.innerWidth + " x " + window.innerHeight
-);
 
 export default {
   data() {
