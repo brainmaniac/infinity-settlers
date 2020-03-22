@@ -58,7 +58,7 @@ export default {
       dragItemId: null,
       configKonva: {
         width: width,
-        height: height
+        height: height,       
       }
     };
   },
@@ -95,7 +95,7 @@ export default {
   },
 
   mounted() {
-    for (let n = 0; n < 200; n++) {
+    for (let n = 0; n < 60; n++) {
       this.list.push({
         id: Math.round(Math.random() * 1000000).toString(),
         x: Math.random() * width,

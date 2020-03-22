@@ -2008,7 +2008,7 @@ var height = window.innerHeight;
     };
   },
   mounted: function mounted() {
-    for (var n = 0; n < 200; n++) {
+    for (var n = 0; n < 60; n++) {
       this.list.push({
         id: Math.round(Math.random() * 1000000).toString(),
         x: Math.random() * width,
