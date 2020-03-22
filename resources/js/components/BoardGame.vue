@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import {Howl, Howler} from 'howler';
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 export default {
@@ -60,6 +62,13 @@ export default {
       this.list.push(item);
     },
     handleDragend(e) {
+        //e.target.attrs.x=50;
+        var sound = new Howl({
+            src: ['sounds/punch.mp3']
+        });
+
+        sound.play();
+
       this.dragItemId = null;
     }
   },
