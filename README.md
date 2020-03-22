@@ -1,3 +1,5 @@
 # A hexagon game
 
-![image](https://user-images.githubusercontent.com/3457668/77247361-914a0a00-6c30-11ea-9f74-68cacb73bf18.png)
+![image](https://user-images.githubusercontent.com/3457668/77252212-cbc49e80-6c52-11ea-95f7-ea390db30dfe.png)
+
+Demo: [Infinity Settlers](https://infinity-settlers.andersjurisoo.com)
