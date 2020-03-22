@@ -1960,6 +1960,8 @@ __webpack_require__.r(__webpack_exports__);
 
 var width = window.innerWidth;
 var height = window.innerHeight;
+console.log("width", width);
+console.log("height", height);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2000,7 +2002,7 @@ var height = window.innerHeight;
 
     var image = new window.Image(); //image.src = "https://konvajs.org/assets/yoda.jpg";
 
-    image.src = "https://infinity-settlers.test/images/terrain.png";
+    image.src = "/images/terrain.png";
 
     image.onload = function () {
       // set image only when it is loaded
