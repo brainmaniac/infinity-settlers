@@ -7,6 +7,19 @@
       @dragend="handleDragend"
     >
       <v-layer :v-if="imagesReady()" ref="layer">
+        <v-circle 
+            v-for="color in ['white']"
+            v-bind:key="color"
+            :config="{
+                x: 100 + Math.random() * 200,
+                y: 600 + Math.random() * 200,
+                radius: 10,
+                shadowBlur: 5,
+                fill: 'white',
+                draggable: true,
+            }"
+        />
+
         <v-regular-polygon
           v-for="item in list"
           @click="rotate"
@@ -71,16 +84,13 @@ export default {
     },
 
     handleDragstart(e) {
-        console.log(
-            Object.keys(this.images).length
-        )
       // save drag element:
       this.dragItemId = e.target.id();
+
       // move current element to the top:
       const item = this.list.find(i => i.id === this.dragItemId);
       const index = this.list.indexOf(item);
-      this.list.splice(index, 1);
-      this.list.push(item);
+      item ? this.list.splice(index, 1) && this.list.push(item) : null;
     },
     handleDragend(e) {
         this.dragItemId = e.target.id();

@@ -1968,6 +1968,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var width = window.innerWidth;
 var height = window.innerHeight;
@@ -1992,16 +2005,14 @@ var height = window.innerHeight;
     handleDragstart: function handleDragstart(e) {
       var _this = this;
 
-      console.log(Object.keys(this.images).length); // save drag element:
-
+      // save drag element:
       this.dragItemId = e.target.id(); // move current element to the top:
 
       var item = this.list.find(function (i) {
         return i.id === _this.dragItemId;
       });
       var index = this.list.indexOf(item);
-      this.list.splice(index, 1);
-      this.list.push(item);
+      item ? this.list.splice(index, 1) && this.list.push(item) : null;
     },
     handleDragend: function handleDragend(e) {
       var _this2 = this;
@@ -53508,49 +53519,67 @@ var render = function() {
           _c(
             "v-layer",
             { ref: "layer", attrs: { "v-if": _vm.imagesReady() } },
-            _vm._l(_vm.list, function(item) {
-              return _c("v-regular-polygon", {
-                key: item.id,
-                attrs: {
-                  config: {
-                    x: item.x,
-                    y: item.y,
-                    sides: 6,
-                    rotation: item.rotation,
-                    id: item.id,
-                    radius: _vm.hexagonRadius,
-                    opacity: 0.8,
-                    //fill: 'green',
-                    fillPatternImage: _vm.images[item.image],
-                    fillPatternRepeat: "no-repeat",
-                    fillPatternOffset: {
-                      x: _vm.image.width / 2,
-                      y: _vm.image.height / 2
-                    },
-                    fillPatternScale: {
-                      x: _vm.hexagonRadius / _vm.image.height,
-                      y: _vm.hexagonRadius / _vm.image.height
-                    },
-                    draggable: true,
-                    scaleX:
-                      _vm.dragItemId === item.id
-                        ? item.scale * 1.2
-                        : item.scale,
-                    scaleY:
-                      _vm.dragItemId === item.id
-                        ? item.scale * 1.2
-                        : item.scale,
-                    shadowColor: "black",
-                    shadowBlur: 10,
-                    shadowOffsetX: _vm.dragItemId === item.id ? 5 : 2,
-                    shadowOffsetY: _vm.dragItemId === item.id ? 5 : 2,
-                    shadowOpacity: 0.6
+            [
+              _vm._l(["white"], function(color) {
+                return _c("v-circle", {
+                  key: color,
+                  attrs: {
+                    config: {
+                      x: 100 + Math.random() * 200,
+                      y: 600 + Math.random() * 200,
+                      radius: 10,
+                      shadowBlur: 5,
+                      fill: "white",
+                      draggable: true
+                    }
                   }
-                },
-                on: { click: _vm.rotate }
+                })
+              }),
+              _vm._v(" "),
+              _vm._l(_vm.list, function(item) {
+                return _c("v-regular-polygon", {
+                  key: item.id,
+                  attrs: {
+                    config: {
+                      x: item.x,
+                      y: item.y,
+                      sides: 6,
+                      rotation: item.rotation,
+                      id: item.id,
+                      radius: _vm.hexagonRadius,
+                      opacity: 0.8,
+                      //fill: 'green',
+                      fillPatternImage: _vm.images[item.image],
+                      fillPatternRepeat: "no-repeat",
+                      fillPatternOffset: {
+                        x: _vm.image.width / 2,
+                        y: _vm.image.height / 2
+                      },
+                      fillPatternScale: {
+                        x: _vm.hexagonRadius / _vm.image.height,
+                        y: _vm.hexagonRadius / _vm.image.height
+                      },
+                      draggable: true,
+                      scaleX:
+                        _vm.dragItemId === item.id
+                          ? item.scale * 1.2
+                          : item.scale,
+                      scaleY:
+                        _vm.dragItemId === item.id
+                          ? item.scale * 1.2
+                          : item.scale,
+                      shadowColor: "black",
+                      shadowBlur: 10,
+                      shadowOffsetX: _vm.dragItemId === item.id ? 5 : 2,
+                      shadowOffsetY: _vm.dragItemId === item.id ? 5 : 2,
+                      shadowOpacity: 0.6
+                    }
+                  },
+                  on: { click: _vm.rotate }
+                })
               })
-            }),
-            1
+            ],
+            2
           )
         ],
         1
