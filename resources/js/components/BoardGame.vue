@@ -6,7 +6,7 @@
       @dragstart="handleDragstart"
       @dragend="handleDragend"
     >
-      <v-layer ref="layer">
+      <v-layer v-if="image" ref="layer">
         <v-regular-polygon
           v-for="item in list"
           :key="item.id"
@@ -17,9 +17,19 @@
             rotation: item.rotation,
             id: item.id,
             numPoints: 5,
-            radius: 70,
-            outerRadius: 50, fill: '#89b717',
+            radius: 30,
+            outerRadius: 50,
             opacity: 0.8,
+            fillPatternImage: image,
+            fillPatternRepeat: 'no-repeat',
+            fillPatternOffset: {
+                x: 512,
+                y: 512,
+            },
+            fillPatternScale: {
+                x: 0.07,
+                y: 0.07,
+            },
             draggable: true,
             scaleX: dragItemId === item.id ? item.scale * 1.2 : item.scale,
             scaleY: dragItemId === item.id ? item.scale * 1.2 : item.scale,
@@ -43,6 +53,7 @@ const height = window.innerHeight;
 export default {
   data() {
     return {
+      image: false,
       list: [],
       dragItemId: null,
       configKonva: {
@@ -72,13 +83,24 @@ export default {
       this.dragItemId = null;
     }
   },
+
+  created() {
+    const image = new window.Image();
+    //image.src = "https://konvajs.org/assets/yoda.jpg";
+    image.src = "http://infinity-settlers.test/images/terrain.png";
+    image.onload = () => {
+      // set image only when it is loaded
+      this.image = image;
+    };
+  },
+
   mounted() {
     for (let n = 0; n < 200; n++) {
       this.list.push({
         id: Math.round(Math.random() * 1000000).toString(),
         x: Math.random() * width,
         y: Math.random() * height,
-        rotation: 0, //Math.random() * 180,
+        rotation: 120 * Math.floor(Math.random() * 5),
         scale: 0.5
       });
     }

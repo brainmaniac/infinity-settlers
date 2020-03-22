@@ -1947,12 +1947,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var width = window.innerWidth;
 var height = window.innerHeight;
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      image: false,
       list: [],
       dragItemId: null,
       configKonva: {
@@ -1984,14 +1995,25 @@ var height = window.innerHeight;
       this.dragItemId = null;
     }
   },
+  created: function created() {
+    var _this2 = this;
+
+    var image = new window.Image(); //image.src = "https://konvajs.org/assets/yoda.jpg";
+
+    image.src = "http://infinity-settlers.test/images/terrain.png";
+
+    image.onload = function () {
+      // set image only when it is loaded
+      _this2.image = image;
+    };
+  },
   mounted: function mounted() {
     for (var n = 0; n < 200; n++) {
       this.list.push({
         id: Math.round(Math.random() * 1000000).toString(),
         x: Math.random() * width,
         y: Math.random() * height,
-        rotation: 0,
-        //Math.random() * 180,
+        rotation: 120 * Math.floor(Math.random() * 5),
         scale: 0.5
       });
     }
@@ -53305,44 +53327,55 @@ var render = function() {
           on: { dragstart: _vm.handleDragstart, dragend: _vm.handleDragend }
         },
         [
-          _c(
-            "v-layer",
-            { ref: "layer" },
-            _vm._l(_vm.list, function(item) {
-              return _c("v-regular-polygon", {
-                key: item.id,
-                attrs: {
-                  config: {
-                    x: item.x,
-                    y: item.y,
-                    sides: 6,
-                    rotation: item.rotation,
-                    id: item.id,
-                    numPoints: 5,
-                    radius: 70,
-                    outerRadius: 50,
-                    fill: "#89b717",
-                    opacity: 0.8,
-                    draggable: true,
-                    scaleX:
-                      _vm.dragItemId === item.id
-                        ? item.scale * 1.2
-                        : item.scale,
-                    scaleY:
-                      _vm.dragItemId === item.id
-                        ? item.scale * 1.2
-                        : item.scale,
-                    shadowColor: "black",
-                    shadowBlur: 10,
-                    shadowOffsetX: _vm.dragItemId === item.id ? 15 : 5,
-                    shadowOffsetY: _vm.dragItemId === item.id ? 15 : 5,
-                    shadowOpacity: 0.6
-                  }
-                }
-              })
-            }),
-            1
-          )
+          _vm.image
+            ? _c(
+                "v-layer",
+                { ref: "layer" },
+                _vm._l(_vm.list, function(item) {
+                  return _c("v-regular-polygon", {
+                    key: item.id,
+                    attrs: {
+                      config: {
+                        x: item.x,
+                        y: item.y,
+                        sides: 6,
+                        rotation: item.rotation,
+                        id: item.id,
+                        numPoints: 5,
+                        radius: 30,
+                        outerRadius: 50,
+                        opacity: 0.8,
+                        fillPatternImage: _vm.image,
+                        fillPatternRepeat: "no-repeat",
+                        fillPatternOffset: {
+                          x: 512,
+                          y: 512
+                        },
+                        fillPatternScale: {
+                          x: 0.07,
+                          y: 0.07
+                        },
+                        draggable: true,
+                        scaleX:
+                          _vm.dragItemId === item.id
+                            ? item.scale * 1.2
+                            : item.scale,
+                        scaleY:
+                          _vm.dragItemId === item.id
+                            ? item.scale * 1.2
+                            : item.scale,
+                        shadowColor: "black",
+                        shadowBlur: 10,
+                        shadowOffsetX: _vm.dragItemId === item.id ? 15 : 5,
+                        shadowOffsetY: _vm.dragItemId === item.id ? 15 : 5,
+                        shadowOpacity: 0.6
+                      }
+                    }
+                  })
+                }),
+                1
+              )
+            : _vm._e()
         ],
         1
       )
