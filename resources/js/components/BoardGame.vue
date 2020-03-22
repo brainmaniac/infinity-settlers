@@ -51,8 +51,9 @@ import {Howl, Howler} from 'howler';
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-console.log("width", width)
-console.log("height", height)
+alert(
+    window.innerWidth + " x " + window.innerHeight
+);
 
 export default {
   data() {

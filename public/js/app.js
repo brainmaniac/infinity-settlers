@@ -1960,8 +1960,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var width = window.innerWidth;
 var height = window.innerHeight;
-console.log("width", width);
-console.log("height", height);
+alert(window.innerWidth + " x " + window.innerHeight);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
