@@ -1981,13 +1981,47 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var width = window.innerWidth;
 var height = window.innerHeight;
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      width: window.innerWidth,
+      height: window.innerHeight,
       image: false,
+      background: false,
+      dices: false,
       images: {},
       hexagonRadius: 100,
       list: [],
@@ -2066,11 +2100,25 @@ var height = window.innerHeight;
     },
     image_names: function image_names() {
       return [//...Array(10).fill("0_1.png"),
-      "0_1.png", "1_1.png", "1_2.png", "2_1.png", "2_2.png", "3_1.png", "3_2.png", "4_1.png", "4_2.png", "5_1.png", "5_2.png", "5_3.png", "6_1.png", "6_2.png"];
+      "0_1.png", "0_2.png", "1_1.png", "1_2.png", "1_3.png", "2_1.png", "2_2.png", "3_1.png", "3_2.png", "4_1.png", "4_2.png", "5_1.png", "5_2.png", "5_3.png", "6_1.png", "6_2.png"];
     }
   },
   created: function created() {
     var _this3 = this;
+
+    var background = new window.Image();
+    background.src = "/images/background.jpg";
+
+    background.onload = function () {
+      _this3.background = background;
+    };
+
+    var dices = new window.Image();
+    dices.src = "/images/dices.png";
+
+    dices.onload = function () {
+      _this3.dices = dices;
+    };
 
     var _iterator = _createForOfIteratorHelper(this.image_names()),
         _step;
@@ -53520,20 +53568,51 @@ var render = function() {
             "v-layer",
             { ref: "layer", attrs: { "v-if": _vm.imagesReady() } },
             [
-              _vm._l(["white"], function(color) {
-                return _c("v-circle", {
-                  key: color,
-                  attrs: {
-                    config: {
-                      x: 100 + Math.random() * 200,
-                      y: 600 + Math.random() * 200,
-                      radius: 10,
-                      shadowBlur: 5,
-                      fill: "white",
-                      draggable: true
+              _c("v-text", {
+                attrs: {
+                  config: {
+                    x: 600,
+                    y: 100,
+                    text: "VINLAND VIKINGS",
+                    fontSize: 20,
+                    fontFamily: "Calibri",
+                    fill: "white"
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("v-rect", {
+                attrs: {
+                  config: {
+                    width: _vm.width,
+                    height: _vm.height,
+                    zIndex: -1,
+                    fillPatternImage: _vm.background,
+                    fillPatternRepeat: "no-repeat",
+                    fillPatternScale: {
+                      x: 0.3,
+                      y: 0.3
                     }
                   }
-                })
+                }
+              }),
+              _vm._v(" "),
+              _c("v-rect", {
+                attrs: {
+                  config: {
+                    width: 100,
+                    height: 100,
+                    x: 500,
+                    y: 500,
+                    fillPatternImage: _vm.dices,
+                    fillPatternRepeat: "no-repeat",
+                    fillPatternScale: {
+                      x: 0.2,
+                      y: 0.2
+                    },
+                    draggable: true
+                  }
+                }
               }),
               _vm._v(" "),
               _vm._l(_vm.list, function(item) {

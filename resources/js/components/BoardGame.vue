@@ -7,18 +7,48 @@
       @dragend="handleDragend"
     >
       <v-layer :v-if="imagesReady()" ref="layer">
-        <v-circle 
-            v-for="color in ['white']"
-            v-bind:key="color"
+
+        <v-text 
             :config="{
-                x: 100 + Math.random() * 200,
-                y: 600 + Math.random() * 200,
-                radius: 10,
-                shadowBlur: 5,
-                fill: 'white',
-                draggable: true,
+                x: 600,
+                y: 100,
+                text: 'VINLAND VIKINGS',
+                fontSize: 20,
+                fontFamily: 'Calibri',
+                fill: 'white'
             }"
         />
+
+        <v-rect 
+            :config="{
+                width: width,
+                height: height,
+                zIndex: -1,
+                fillPatternImage: background,
+                fillPatternRepeat: 'no-repeat',
+                fillPatternScale: {
+                    x: 0.3,
+                    y: 0.3
+                }
+            }"
+        />
+
+
+        <v-rect 
+            :config="{
+                width: 100,
+                height: 100,
+                x: 500,
+                y: 500,                
+                fillPatternImage: dices,
+                fillPatternRepeat: 'no-repeat',
+                fillPatternScale: {
+                    x: 0.2,
+                    y: 0.2
+                },
+                draggable: true,
+            }"
+        />        
 
         <v-regular-polygon
           v-for="item in list"
@@ -67,7 +97,11 @@ const height = window.innerHeight;
 export default {
   data() {
     return {
+      width: window.innerWidth,
+      height: window.innerHeight,
       image: false,
+      background: false,
+      dices: false,
       images: {},
       hexagonRadius: 100,
       list: [],
@@ -149,8 +183,10 @@ export default {
             return [
                 //...Array(10).fill("0_1.png"),
                 "0_1.png",
+                "0_2.png",
                 "1_1.png",
                 "1_2.png",
+                "1_3.png",
                 "2_1.png",
                 "2_2.png",
                 "3_1.png",
@@ -169,6 +205,18 @@ export default {
 
 
     created() {
+        const background = new window.Image();
+        background.src = "/images/background.jpg";
+        background.onload = () => {
+            this.background = background
+        };
+        
+        const dices = new window.Image();
+        dices.src = "/images/dices.png";
+        dices.onload = () => {
+            this.dices = dices
+        };         
+
         for(const name of this.image_names()) {
             const image = new window.Image();
             image.src = "/images/" + name;
