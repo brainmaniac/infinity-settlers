@@ -2011,6 +2011,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var width = window.innerWidth;
 var height = window.innerHeight;
@@ -2023,8 +2042,10 @@ var height = window.innerHeight;
       background: false,
       dices: false,
       images: {},
+      resources: {},
       hexagonRadius: 100,
       list: [],
+      resource_list: [],
       dragItemId: null,
       configKonva: {
         width: width,
@@ -2124,7 +2145,7 @@ var height = window.innerHeight;
         _step;
 
     try {
-      var _loop = function _loop() {
+      var _loop2 = function _loop2() {
         var name = _step.value;
         var image = new window.Image();
         image.src = "/images/" + name;
@@ -2136,12 +2157,26 @@ var height = window.innerHeight;
       };
 
       for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        _loop();
+        _loop2();
       }
     } catch (err) {
       _iterator.e(err);
     } finally {
       _iterator.f();
+    }
+
+    var _loop = function _loop() {
+      var name = _arr[_i];
+      var resource = new window.Image();
+      resource.src = "/images/" + name;
+
+      resource.onload = function () {
+        _this3.resources[name] = resource;
+      };
+    };
+
+    for (var _i = 0, _arr = ['wood.jpg', 'stone.jpg', 'clay.jpg', 'wheat.jpg', 'sheep.jpg']; _i < _arr.length; _i++) {
+      _loop();
     }
   },
   mounted: function mounted() {
@@ -2153,6 +2188,17 @@ var height = window.innerHeight;
         y: Math.random() * height / 2,
         rotation: 0,
         //120 * Math.floor(Math.random() * 5),
+        scale: 1
+      });
+    }
+
+    for (var _n = 0; _n < 20; _n++) {
+      this.resource_list.push({
+        id: Math.round(Math.random() * 1000000).toString(),
+        image: ['wood.jpg', 'stone.jpg', 'clay.jpg', 'wheat.jpg', 'sheep.jpg'][Math.floor(Math.random() * 5)],
+        x: 500 + Math.random() * 100,
+        y: 500 + Math.random() * 10,
+        rotation: 10 * Math.floor(Math.random() * 5) - 10 * Math.floor(Math.random() * 5),
         scale: 1
       });
     }
@@ -53602,7 +53648,7 @@ var render = function() {
                   config: {
                     width: 100,
                     height: 100,
-                    x: 500,
+                    x: 200,
                     y: 500,
                     fillPatternImage: _vm.dices,
                     fillPatternRepeat: "no-repeat",
@@ -53655,6 +53701,28 @@ var render = function() {
                     }
                   },
                   on: { click: _vm.rotate }
+                })
+              }),
+              _vm._v(" "),
+              _vm._l(_vm.resource_list, function(item) {
+                return _c("v-rect", {
+                  key: item.id,
+                  attrs: {
+                    config: {
+                      width: 100,
+                      height: 400,
+                      x: item.x,
+                      y: item.y,
+                      rotation: item.rotation,
+                      fillPatternImage: _vm.resources[item.image],
+                      fillPatternRepeat: "no-repeat",
+                      fillPatternScale: {
+                        x: 0.5,
+                        y: 0.5
+                      },
+                      draggable: true
+                    }
+                  }
                 })
               })
             ],

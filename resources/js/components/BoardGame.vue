@@ -38,7 +38,7 @@
             :config="{
                 width: 100,
                 height: 100,
-                x: 500,
+                x: 200,
                 y: 500,                
                 fillPatternImage: dices,
                 fillPatternRepeat: 'no-repeat',
@@ -83,6 +83,25 @@
             shadowOpacity: 0.6
           }"
         ></v-regular-polygon>
+
+        <v-rect
+          v-for="item in resource_list"
+          :key="item.id"
+          :config="{
+                width: 100,
+                height: 400,
+                x: item.x,
+                y: item.y,
+                rotation: item.rotation,                
+                fillPatternImage: resources[item.image],
+                fillPatternRepeat: 'no-repeat',
+                fillPatternScale: {
+                    x: 0.5,
+                    y: 0.5
+                },
+                draggable: true,
+            }"
+        ></v-rect>        
       </v-layer>
     </v-stage>
   </div>
@@ -103,8 +122,10 @@ export default {
       background: false,
       dices: false,
       images: {},
+      resources: {},
       hexagonRadius: 100,
       list: [],
+      resource_list: [],
       dragItemId: null,
       configKonva: {
         width: width,
@@ -225,6 +246,14 @@ export default {
                 this.images[name] = image;
             };
         }
+
+        for(const name of ['wood.jpg', 'stone.jpg', 'clay.jpg', 'wheat.jpg', 'sheep.jpg' ]) {
+            const resource = new window.Image();
+            resource.src = "/images/" + name;
+            resource.onload = () => {
+                this.resources[name] = resource;
+            };
+        }        
     },
 
   mounted() {
@@ -238,6 +267,17 @@ export default {
         scale: 1
       });
     }
+
+    for (let n = 0; n < 20; n++) {
+      this.resource_list.push({
+        id: Math.round(Math.random() * 1000000).toString(),
+        image: ['wood.jpg', 'stone.jpg', 'clay.jpg', 'wheat.jpg', 'sheep.jpg' ][Math.floor(Math.random() * 5)],
+        x: 500 + Math.random() * 100,
+        y: 500 + Math.random() * 10,
+        rotation: 10 * Math.floor(Math.random() * 5) - 10 * Math.floor(Math.random() * 5),
+        scale: 1
+      });
+    }    
   }
 };
 </script>
